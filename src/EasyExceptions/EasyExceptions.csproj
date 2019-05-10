@@ -9,10 +9,10 @@
     <FileVersion>$(Version).0</FileVersion>
     <Description>Provides "string ExceptionDumpUtil.Dump(Exception)" method that recursively dumps all exception stack traces and properties into a string.</Description>
     <Authors>Alexey Kuptsov</Authors>
-    <Copyright>Copyright © 2015-2017 Alexey Kuptsov</Copyright>
+    <Copyright>Alexey Kuptsov</Copyright>
     <Company>Alexey Kuptsov</Company>
-    <PackageLicenseUrl>https://bitbucket.org/AlexeyKuptsov/easyexceptions/wiki/EasyExceptions%20License</PackageLicenseUrl>
-    <PackageProjectUrl>https://bitbucket.org/AlexeyKuptsov/easyexceptions</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/alexeykuptsov/easy-exceptions/blob/master/LICENSE.txt</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/alexeykuptsov/easy-exceptions</PackageProjectUrl>
     <PackageTags>dump exception string</PackageTags>
   </PropertyGroup>
 
