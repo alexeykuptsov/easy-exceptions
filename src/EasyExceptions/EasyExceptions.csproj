@@ -6,7 +6,7 @@
     <RootNamespace>EasyExceptions</RootNamespace>
     <Version>9999.0.0</Version>
     <BuildCounter>0</BuildCounter>
-    <AssemblyVersion>$(Version).${BuildCounter}</AssemblyVersion>
+    <AssemblyVersion>$(Version).$(BuildCounter)</AssemblyVersion>
     <FileVersion>$(Version).${BuildCounter}</FileVersion>
     <Description>Provides "string ExceptionDumpUtil.Dump(Exception)" method that recursively dumps all exception stack traces and properties into a string.</Description>
     <Authors>Alexey Kuptsov</Authors>
