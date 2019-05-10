@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.0</TargetFramework>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <RootNamespace>EasyExceptions</RootNamespace>
+    <Version>99.99.99</Version>
+    <AssemblyVersion>$(Version).0</AssemblyVersion>
+    <FileVersion>$(Version).0</FileVersion>
+    <Description>Provides "string ExceptionDumpUtil.Dump(Exception)" method that recursively dumps all exception stack traces and properties into a string.</Description>
+    <Authors>Alexey Kuptsov</Authors>
+    <Copyright>Copyright © 2015-2017 Alexey Kuptsov</Copyright>
+    <Company>Alexey Kuptsov</Company>
+    <PackageLicenseUrl>https://bitbucket.org/AlexeyKuptsov/easyexceptions/wiki/EasyExceptions%20License</PackageLicenseUrl>
+    <PackageProjectUrl>https://bitbucket.org/AlexeyKuptsov/easyexceptions</PackageProjectUrl>
+    <PackageTags>dump exception string</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <WarningLevel>0</WarningLevel>
+    <OutputPath>..\..\binDebug\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\..\bin</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\AssemblyKey.cs" Link="AssemblyKey.cs" />
+  </ItemGroup>
+
+</Project>
