@@ -350,6 +350,7 @@ StackTrace = ``
 ";
 
         [Test]
+        [Ignore("Can't fine localdb installation on gsptools-teamcity--win-agent")]
         public void DbEntityValidationException()
         {
             DoTest(DbEntityValidationExceptionExpectation, () =>
