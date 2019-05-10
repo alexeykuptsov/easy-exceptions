@@ -28,5 +28,9 @@ catch (Exception ex)
 ```console
 python3 prebuild.py
 nuget restore src/EasyExceptions.sln
-msbuild src/EasyExceptions.sln /p:Configuration=Release /p:DefineConstants=STRONG_NAME /p:Version=$VERSION
+msbuild src/EasyExceptions.sln \
+    -p:Configuration=Release \
+    -p:DefineConstants=STRONG_NAME \
+    -p:Version=$VERSION \
+    -p:BuildCounter=$BUILD_COUNTER
 ```
