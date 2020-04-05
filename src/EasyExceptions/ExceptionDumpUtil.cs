@@ -126,7 +126,7 @@ namespace EasyExceptions
                 new MessageRule(),
                 new CalculatedPropertiesRule(),
                 new ExcludeStackTraceRelatedPropertiesRule(),
-                new ExcludeIPForWatsonBucketsPropertyRule(),
+                new ExcludeWatsonBucketsPropertiesRule(),
                 new RegularPropertiesRule(),
                 new StackTraceRule()
             };

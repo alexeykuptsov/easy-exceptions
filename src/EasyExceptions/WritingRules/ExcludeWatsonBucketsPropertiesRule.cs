@@ -4,11 +4,12 @@ using System.Text;
 
 namespace EasyExceptions.WritingRules
 {
-    public class ExcludeIPForWatsonBucketsPropertyRule : IWritingRule
+    public class ExcludeWatsonBucketsPropertiesRule : IWritingRule
     {
         public void Apply(StringBuilder resultBuilder, object obj, Dictionary<string, object> allProperties)
         {
             allProperties.Remove("IPForWatsonBuckets");
+            allProperties.Remove("WatsonBuckets");
         }
     }
 }

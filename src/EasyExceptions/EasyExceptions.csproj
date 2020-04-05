@@ -32,11 +32,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="..\..\LICENSE.txt" PackagePath="LICENSE.txt">
+    <None Include="..\..\LICENSE.txt" PackagePath="LICENSE.txt">
       <Pack>true</Pack>
       <Link>LICENSE.txt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
   </ItemGroup>
 
 </Project>
