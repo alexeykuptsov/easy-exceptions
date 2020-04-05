@@ -72,3 +72,4 @@ artifacts/
 *.iml
 key.snk
 .idea/misc.xml
+venv
