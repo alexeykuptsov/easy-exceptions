@@ -7,14 +7,22 @@ namespace EasyExceptions.Utils
     {
         private readonly List<IDisposable> myDisposables = new List<IDisposable>();
 
+        [Obsolete("Use method Register instead.")]
         public void Using(IDisposable disposable)
+        {
+            myDisposables.Add(disposable);
+        }
+
+        public void Register(IDisposable disposable)
         {
             myDisposables.Add(disposable);
         }
         
         public void Dispose()
         {
-            foreach (var disposable in myDisposables)
+            var disposablesToEnumerate = new List<IDisposable>(myDisposables);
+            disposablesToEnumerate.Reverse();
+            foreach (var disposable in disposablesToEnumerate)
             {
                 disposable.Dispose();
             }
