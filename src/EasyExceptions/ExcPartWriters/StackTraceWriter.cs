@@ -4,9 +4,9 @@ using System.Text;
 
 namespace EasyExceptions.WritingRules
 {
-    public class StackTraceRule : IWritingRule
+    public class StackTraceWriter : IExcPartWriter
     {
-        public void Apply(StringBuilder resultBuilder, object obj, Dictionary<string, object> allProperties)
+        public void Apply(StringBuilder resultBuilder, object obj, Dictionary<string, object> propertiesToBeWritten)
         {
             var exception = obj as Exception;
             if (exception == null)
@@ -16,7 +16,7 @@ namespace EasyExceptions.WritingRules
             resultBuilder.Append(exception.StackTrace).AppendLine();
             resultBuilder.Append("``").AppendLine();
 
-            allProperties.Remove("StackTrace");
+            propertiesToBeWritten.Remove("StackTrace");
         }
     }
 }

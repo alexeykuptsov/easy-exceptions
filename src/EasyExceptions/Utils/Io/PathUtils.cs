@@ -4,12 +4,6 @@ namespace EasyExceptions.Utils.Io
 {
     public static class PathUtils
     {
-        public static char DirectorySeparatorChar
-        {
-            get
-            {
-                return Path.Combine("a", "b")[1];
-            }
-        }
+        public static char DirectorySeparatorChar => Path.Combine("a", "b")[1];
     }
 }

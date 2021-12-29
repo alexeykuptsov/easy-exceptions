@@ -7,12 +7,6 @@ namespace EasyExceptions.Utils
     {
         private readonly List<IDisposable> myDisposables = new List<IDisposable>();
 
-        [Obsolete("Use method Register instead.")]
-        public void Using(IDisposable disposable)
-        {
-            myDisposables.Add(disposable);
-        }
-
         public void Register(IDisposable disposable)
         {
             myDisposables.Add(disposable);

@@ -3,7 +3,7 @@ using System.Text;
 
 namespace EasyExceptions.NameValueWriters
 {
-    class ExceptionPropertyWriter : PropertyWriterBase<Exception>
+    class ExceptionNameValueWriter : NameValueWriterBase<Exception>
     {
         protected override void WriteInternal(StringBuilder resultBuilder, string name, Exception dictionary)
         {

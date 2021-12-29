@@ -1,20 +1,34 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using EasyExceptions.WritingRules;
-using System.Threading.Tasks;
 using System.Reflection;
+using EasyExceptions.NameValueWriters;
 using EasyExceptions.Utils.Io;
 
 namespace EasyExceptions
 {
     public static class ExceptionDumpUtil
     {
+        public static List<IExcPartWriter> ExcPartWriters => new List<IExcPartWriter>
+        {
+            new MessageWriter(),
+            new CalculatedPropertiesWriter(),
+            new ExcludeStackTraceRelatedPropertiesWriter(),
+            new ExcludeWatsonBucketsPropertiesWriter(),
+            new RegularPropertiesWriter(),
+            new StackTraceWriter(),
+        };
+
+        public static List<INameValueWriter> NameValueWriters => new List<INameValueWriter>
+        {
+            new ExceptionNameValueWriter(),
+            new InnerExceptionsNameValueWriter(),
+            new YamlSerializingNameValueWriter(),
+        };
+
         public const string ServiceDataPrefix = "12F1CADC21A842EFAD20BF81F4B6117A";
 
         public static string Dump(Exception exception)
@@ -66,6 +80,7 @@ namespace EasyExceptions
             {
                 result = result.Replace(" in " + sourceDirectoryToOmit + PathUtils.DirectorySeparatorChar, " in ");
             }
+
             return result;
         }
 
@@ -96,6 +111,7 @@ namespace EasyExceptions
 
                 i++;
             }
+
             resultBuilder.AppendLine(string.Join(" ", exceptionMessages));
 
             allExceptions.Reverse();
@@ -121,17 +137,7 @@ namespace EasyExceptions
                 exceptionInfo.Exception.GetType().Name);
             resultBuilder.AppendLine();
 
-            var writingRules = new List<IWritingRule>
-            {
-                new MessageRule(),
-                new CalculatedPropertiesRule(),
-                new ExcludeStackTraceRelatedPropertiesRule(),
-                new ExcludeWatsonBucketsPropertiesRule(),
-                new RegularPropertiesRule(),
-                new StackTraceRule()
-            };
-
-            foreach (var writingRule in writingRules)
+            foreach (var writingRule in ExcPartWriters)
             {
                 writingRule.Apply(resultBuilder, exceptionInfo.Exception, exceptionInfo.Properties);
             }
@@ -182,6 +188,7 @@ namespace EasyExceptions
                         {
                             FindAll(exceptionItem, accumulatedExceptions, path + "." + propertyInfo.Name + "[" + i + "]");
                         }
+
                         i++;
                     }
                 }
