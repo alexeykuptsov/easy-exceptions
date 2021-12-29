@@ -26,14 +26,15 @@ catch (Exception ex)
 ## Build
 
 ```powershell
-set ASSEMBLY_KEY_PATH=%OneDrive%\Keys\AssemblySigning\key.snk
-python3 prebuild.py
+$env:ASSEMBLY_KEY_PATH=$AssemblySigningKeyPath + '\key.snk'
+$env:BUILD_COUNTER='1234'
+python prebuild.py
 nuget restore src/EasyExceptions.sln
 msbuild src/EasyExceptions.sln \
     -p:Configuration=Release \
     -p:DefineConstants=STRONG_NAME \
     -p:Version=$VERSION \
-    -p:BuildCounter=$BUILD_COUNTER
+    -p:BuildCounter=$env:BUILD_COUNTER
 ```
 
 ## Deploy
@@ -57,10 +58,9 @@ are actual according to Google Trends):
 * `.NET 5`,
 * `.NET Core 3.1`,
 * `.NET Framework 4.8`,
-* `.NET Framework 4.7.2`,
-* `.NET Framework 4.5.2`.
+* `.NET Framework 4.7.2`.
 
-`2.1` Create a project with the selected .NET version.
+`2.1` Create a console app project with the selected .NET version.
 Remember its dependencies.
 
 `2.2` Copy file `testData/nuget.config` to repository root.
