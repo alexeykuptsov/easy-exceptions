@@ -4,9 +4,9 @@ using System.Text;
 
 namespace EasyExceptions.WritingRules
 {
-    public class CalculatedPropertiesRule : IWritingRule
+    public class CalculatedPropertiesWriter : IExcPartWriter
     {
-        public void Apply(StringBuilder resultBuilder, object obj, Dictionary<string, object> allProperties)
+        public void Apply(StringBuilder resultBuilder, object obj, Dictionary<string, object> propertiesToBeWritten)
         {
             var exception = obj as Exception;
             if (exception == null) 

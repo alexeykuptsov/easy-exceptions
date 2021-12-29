@@ -2,7 +2,7 @@ using System.Text;
 
 namespace EasyExceptions.NameValueWriters
 {
-    public abstract class PropertyWriterBase<T> : IPropertyWriter
+    public abstract class NameValueWriterBase<T> : INameValueWriter
     {
         public virtual bool IsValueApplicable(object value)
         {
