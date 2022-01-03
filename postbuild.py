@@ -12,6 +12,6 @@ if __name__ == '__main__':
         semantic_version = f.read()
 
     shutil.copy(
-        os.path.join(root_dir, f'EasyExceptions.{semantic_version}.nupkg'),
+        os.path.join(root_dir, f'bin/EasyExceptions.{semantic_version}.nupkg'),
         artifacts_dir + '/'
     )
