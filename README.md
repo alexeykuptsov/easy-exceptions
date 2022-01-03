@@ -33,7 +33,7 @@ nuget restore src/EasyExceptions.sln
 msbuild src/EasyExceptions.sln \
     -p:Configuration=Release \
     -p:DefineConstants=STRONG_NAME \
-    -p:Version=$VERSION \
+    -p:Version=$SEMANTIC_VERSION \
     -p:BuildCounter=$env:BUILD_COUNTER
 ```
 
