@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -16,28 +17,33 @@ namespace EasyExceptions.NameValueWriters
 
         protected override void WriteInternal(StringBuilder resultBuilder, string name, object value)
         {
-            if (value is IEnumerable)
+            if (value is IDictionary dict)
             {
-                if (value is IDictionary dict)
+                var dictToWrite = new Dictionary<object, object>();
+                foreach (DictionaryEntry dictionaryEntry in dict)
                 {
-                    var dictToWrite = new Dictionary<object, object>();
-                    foreach (DictionaryEntry dictionaryEntry in dict)
-                    {
-                        if (dictionaryEntry.Key is string keyString && keyString.StartsWith(ExceptionDumpUtil.ServiceDataPrefix)) 
-                            continue;
-                        dictToWrite[dictionaryEntry.Key] = dictionaryEntry.Value;
-                    }
-                    if (dictToWrite.Count == 0)
-                        return;
-                    value = dictToWrite;
+                    if (dictionaryEntry.Key is string keyString && keyString.StartsWith(ExceptionDumpUtil.ServiceDataPrefix))
+                        continue;
+                    dictToWrite[dictionaryEntry.Key] = dictionaryEntry.Value;
                 }
-                var valueString = mySerializer.Serialize(new Dictionary<string, object> { [name] = value });
-                resultBuilder.Append(valueString);
+
+                if (dictToWrite.Count == 0)
+                    return;
+                value = dictToWrite;
+            }
+
+            var valueString = mySerializer.Serialize(new Dictionary<string, object> { [name] = value });
+            var lines = valueString.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
+            var nameValueSeparatorIndex = lines[0].IndexOf(": ", StringComparison.Ordinal);
+            if (nameValueSeparatorIndex >= 0)
+            {
+                lines[0] = lines[0].Substring(0, nameValueSeparatorIndex) + " = " + lines[0].Substring(nameValueSeparatorIndex + 2);
             }
             else
             {
-                resultBuilder.AppendFormat("{0} = {1}", name, mySerializer.Serialize(value));
+                lines[0] = lines[0].TrimEnd(':') + " =";
             }
+            resultBuilder.Append(String.Join(Environment.NewLine, lines));
         }
     }
 }
