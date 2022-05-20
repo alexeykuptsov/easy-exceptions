@@ -33,38 +33,27 @@ namespace EasyExceptions
 
         public static string Dump(Exception exception)
         {
-            var resultBuilder = new StringBuilder();
-
-            var dumpingException = DumpExceptionOnCurrentThread(exception, resultBuilder);
-
-            if (dumpingException == null)
-                return RemoveOmittedSourceDirectories(resultBuilder.ToString());
-
-            var failedResultBuilder = new StringBuilder();
-            failedResultBuilder.AppendLine("Exception was thrown while dumping exception.");
-            failedResultBuilder.AppendLine();
-
-            failedResultBuilder.AppendLine("Dumped exception:");
-            failedResultBuilder.AppendLine(exception.ToString());
-            failedResultBuilder.AppendLine();
-
-            failedResultBuilder.AppendLine("Exception that was occured while dumping:");
-            failedResultBuilder.AppendLine(dumpingException);
-            failedResultBuilder.AppendLine();
-
-            return RemoveOmittedSourceDirectories(failedResultBuilder.ToString());
-        }
-
-        private static string DumpExceptionOnCurrentThread(Exception exception, StringBuilder resultBuilder)
-        {
             try
             {
+                var resultBuilder = new StringBuilder();
                 BuildAllExceptionsDump(resultBuilder, exception);
-                return null;
+                return RemoveOmittedSourceDirectories(resultBuilder.ToString());
             }
-            catch (Exception ex)
+            catch (Exception dumpingException)
             {
-                return ex.ToString();
+                var failedResultBuilder = new StringBuilder();
+                failedResultBuilder.AppendLine("Exception was thrown while dumping exception.");
+                failedResultBuilder.AppendLine();
+
+                failedResultBuilder.AppendLine("Dumped exception:");
+                failedResultBuilder.AppendLine(exception.ToString());
+                failedResultBuilder.AppendLine();
+
+                failedResultBuilder.AppendLine("Exception that was occured while dumping:");
+                failedResultBuilder.AppendLine(dumpingException.ToString());
+                failedResultBuilder.AppendLine();
+
+                return RemoveOmittedSourceDirectories(failedResultBuilder.ToString());
             }
         }
 
@@ -76,6 +65,7 @@ namespace EasyExceptions
                 return exceptionText;
 
             var result = exceptionText;
+            // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (var sourceDirectoryToOmit in OmittedSourceDirectories.Split(';'))
             {
                 result = result.Replace(" in " + sourceDirectoryToOmit + PathUtils.DirectorySeparatorChar, " in ");
@@ -161,30 +151,27 @@ namespace EasyExceptions
             foreach (var propertyInfo in exception.GetType().GetRuntimeProperties())
             {
                 object value;
-                string name = propertyInfo.Name;
+                var name = propertyInfo.Name;
                 try
                 {
-                    value = propertyInfo.GetValue(exception, new object[0]);
+                    value = propertyInfo.GetValue(exception, Array.Empty<object>());
                 }
                 catch (Exception ex)
                 {
                     value = $"Exception of type {ex.GetType().FullName} was thrown while getting value.";
                 }
 
-                var innerException = value as Exception;
-                if (innerException != null)
+                if (value is Exception innerException)
                 {
                     FindAll(innerException, accumulatedExceptions, path + "." + propertyInfo.Name);
                 }
 
-                var enumerable = value as IEnumerable;
-                if (enumerable != null && !(enumerable is string))
+                if (value is IEnumerable enumerable && !(enumerable is string))
                 {
                     var i = 0;
                     foreach (var item in enumerable)
                     {
-                        var exceptionItem = item as Exception;
-                        if (exceptionItem != null)
+                        if (item is Exception exceptionItem)
                         {
                             FindAll(exceptionItem, accumulatedExceptions, path + "." + propertyInfo.Name + "[" + i + "]");
                         }

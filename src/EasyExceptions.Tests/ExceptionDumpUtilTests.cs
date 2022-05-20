@@ -122,7 +122,7 @@ StackTrace = ``
 Message = Exception of type 'System.Exception' was thrown.
 @PathFromRootException = root
 @GetType().FullName = System.Exception
-Data:
+Data =
   foo: bar
   42: buz
 HResult = -2146233088
@@ -144,7 +144,7 @@ StackTrace = ``
 Message = Exception of type 'EasyExceptions.Tests.ListException' was thrown.
 @PathFromRootException = root
 @GetType().FullName = EasyExceptions.Tests.ListException
-List:
+List =
 - foo
 - - bar
   - buz
@@ -208,7 +208,7 @@ StackTrace = ``
 Message = Exception of type 'EasyExceptions.Tests.FallingException' was thrown.
 @PathFromRootException = root
 @GetType().FullName = EasyExceptions.Tests.FallingException
-FallingProperty: Exception of type System.Reflection.TargetInvocationException was thrown while getting value.
+FallingProperty = Exception of type System.Reflection.TargetInvocationException was thrown while getting value.
 HResult = -2146233088
 IsTransient = false
 StackTrace = ``
@@ -338,7 +338,7 @@ StackTrace = ``
 Message = Validation failed for one or more entities. See 'EntityValidationErrors' property for more details.
 @PathFromRootException = root
 @GetType().FullName = EasyExceptions.Tests.ComplexPropertyException
-EntityValidationErrors:
+EntityValidationErrors =
 - Entry:
     Entity:
       Id: 240b10f4-11dc-4e75-b268-da922fa6d781
@@ -387,6 +387,28 @@ StackTrace = ``
                 Assert.Fail();
                 return null;
             });
+        }
+
+        private const string ReferenceLoopExpectation =
+            @"Exception of type 'EasyExceptions.Tests.ReferenceLoopObjectException' was thrown.
+
+=== EXCEPTION #1/1: ReferenceLoopObjectException
+Message = Exception of type 'EasyExceptions.Tests.ReferenceLoopObjectException' was thrown.
+@PathFromRootException = root
+@GetType().FullName = EasyExceptions.Tests.ReferenceLoopObjectException
+ReferenceLoopObject = &o0
+  LoopedReference: *o0
+  Text: Hello
+HResult = -2146233088
+IsTransient = false
+StackTrace = ``
+``
+";
+
+        [Test]
+        public void ReferenceLoop()
+        {
+            DoTest(ReferenceLoopExpectation, () => new ReferenceLoopObjectException());
         }
     }
 }
