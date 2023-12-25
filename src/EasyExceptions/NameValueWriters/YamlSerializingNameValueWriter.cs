@@ -8,11 +8,13 @@ namespace EasyExceptions.NameValueWriters
 {
     public class YamlSerializingNameValueWriter : NameValueWriterBase<object>
     {
-        private readonly ISerializer mySerializer;
+        private static readonly ISerializer Serializer;
 
-        public YamlSerializingNameValueWriter()
+        static YamlSerializingNameValueWriter()
         {
-            mySerializer = new SerializerBuilder().Build();
+            Serializer = new SerializerBuilder()
+                .WithTargetInvocationExceptionsHandling()
+                .Build();
         }
 
         protected override void WriteInternal(StringBuilder resultBuilder, string name, object value)
@@ -32,7 +34,7 @@ namespace EasyExceptions.NameValueWriters
                 value = dictToWrite;
             }
 
-            var valueString = mySerializer.Serialize(new Dictionary<string, object> { [name] = value });
+            var valueString = Serializer.Serialize(new Dictionary<string, object> { [name] = value });
             var lines = valueString.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
             var nameValueSeparatorIndex = lines[0].IndexOf(": ", StringComparison.Ordinal);
             if (nameValueSeparatorIndex >= 0)

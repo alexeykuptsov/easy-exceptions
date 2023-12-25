@@ -208,7 +208,7 @@ StackTrace = ``
 Message = Exception of type 'EasyExceptions.Tests.FallingException' was thrown.
 @PathFromRootException = root
 @GetType().FullName = EasyExceptions.Tests.FallingException
-FallingProperty = Exception of type System.Reflection.TargetInvocationException was thrown while getting value.
+FallingProperty = Exception of type System.NotSupportedException was thrown
 HResult = -2146233088
 IsTransient = false
 StackTrace = ``
@@ -409,6 +409,28 @@ StackTrace = ``
         public void ReferenceLoop()
         {
             DoTest(ReferenceLoopExpectation, () => new ReferenceLoopObjectException());
+        }
+        
+        private const string ThrowingPropertyExpectation =
+            @"Exception of type 'EasyExceptions.Tests.ThrowingPropertyException' was thrown.
+
+=== EXCEPTION #1/1: ThrowingPropertyException
+Message = Exception of type 'EasyExceptions.Tests.ThrowingPropertyException' was thrown.
+@PathFromRootException = root
+@GetType().FullName = EasyExceptions.Tests.ThrowingPropertyException
+ThrowingProperty = Exception of type System.ObjectDisposedException was thrown
+ObjectWithThrowingProperty =
+  ThrowingProperty: Exception of type System.ObjectDisposedException was thrown
+HResult = -2146233088
+IsTransient = false
+StackTrace = ``
+``
+";
+
+        [Test]
+        public void ThrowingProperty()
+        {
+            DoTest(ThrowingPropertyExpectation, () => new ThrowingPropertyException());
         }
     }
 }

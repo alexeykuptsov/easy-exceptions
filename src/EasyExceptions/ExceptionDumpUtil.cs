@@ -156,9 +156,15 @@ namespace EasyExceptions
                 {
                     value = propertyInfo.GetValue(exception, Array.Empty<object>());
                 }
+                catch (TargetInvocationException ex)
+                {
+                    value = ex.InnerException != null
+                        ? $"Exception of type {ex.InnerException.GetType().FullName} was thrown"
+                        : $"TargetInvocationException with empty InnerException was thrown";
+                }
                 catch (Exception ex)
                 {
-                    value = $"Exception of type {ex.GetType().FullName} was thrown while getting value.";
+                    value = $"Exception of type {ex.GetType().FullName} was thrown";
                 }
 
                 if (value is Exception innerException)
