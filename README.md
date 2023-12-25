@@ -27,14 +27,11 @@ catch (Exception ex)
 
 ```powershell
 $env:ASSEMBLY_KEY_PATH=$AssemblySigningKeyPath + '\key.snk'
+$env:SEMANTIC_VERSION=(Get-Content .\version.txt)
 $env:BUILD_COUNTER='1234'
 python prebuild.py
-nuget restore src/EasyExceptions.sln
-msbuild src/EasyExceptions.sln \
-    -p:Configuration=Release \
-    -p:DefineConstants=STRONG_NAME \
-    -p:Version=$SEMANTIC_VERSION \
-    -p:BuildCounter=$env:BUILD_COUNTER
+dotnet restore src/EasyExceptions.sln
+dotnet build src/EasyExceptions.sln -p:Configuration=Release -p:DefineConstants=STRONG_NAME -p:Version=$env:SEMANTIC_VERSION -p:BuildCounter=$env:BUILD_COUNTER
 ```
 
 ## Deploy
