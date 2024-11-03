@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using YamlDotNet.Serialization;
+using EasyExceptions.Yaml.Serialization;
 
 namespace EasyExceptions.NameValueWriters
 {
@@ -13,7 +13,7 @@ namespace EasyExceptions.NameValueWriters
         static YamlSerializingNameValueWriter()
         {
             Serializer = new SerializerBuilder()
-                .WithTargetInvocationExceptionsHandling()
+                .WithExceptionHandler((e, o, p) => $"Exception of type {e.GetType().FullName} was thrown")
                 .Build();
         }
 
@@ -36,15 +36,15 @@ namespace EasyExceptions.NameValueWriters
 
             var valueString = Serializer.Serialize(new Dictionary<string, object> { [name] = value });
             var lines = valueString.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
-            var nameValueSeparatorIndex = lines[0].IndexOf(": ", StringComparison.Ordinal);
-            if (nameValueSeparatorIndex >= 0)
-            {
-                lines[0] = lines[0].Substring(0, nameValueSeparatorIndex) + " = " + lines[0].Substring(nameValueSeparatorIndex + 2);
-            }
-            else
-            {
-                lines[0] = lines[0].TrimEnd(':') + " =";
-            }
+            // var nameValueSeparatorIndex = lines[0].IndexOf(": ", StringComparison.Ordinal);
+            // if (nameValueSeparatorIndex >= 0)
+            // {
+            //     lines[0] = lines[0].Substring(0, nameValueSeparatorIndex) + " = " + lines[0].Substring(nameValueSeparatorIndex + 2);
+            // }
+            // else
+            // {
+            //     lines[0] = lines[0].TrimEnd(':') + " =";
+            // }
             resultBuilder.Append(String.Join(Environment.NewLine, lines));
         }
     }

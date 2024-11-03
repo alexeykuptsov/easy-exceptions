@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace EasyExceptions.WritingRules
+namespace EasyExceptions.ExcPartWriters
 {
     public class MessageWriter : IExcPartWriter
     {
@@ -12,7 +12,7 @@ namespace EasyExceptions.WritingRules
             if (exception == null)
                 return;
 
-            resultBuilder.AppendFormat("{0} = {1}", "Message", exception.Message);
+            resultBuilder.AppendFormat("{0}: {1}", "Message", exception.Message);
             resultBuilder.AppendLine();
 
             propertiesToBeWritten.Remove("Message");

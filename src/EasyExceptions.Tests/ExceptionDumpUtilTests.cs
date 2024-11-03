@@ -44,7 +44,7 @@ namespace EasyExceptions.Tests
                         resultBuilder.AppendLine();
                     firstLine = false;
                     resultBuilder.Append(line);
-                    if (line == "StackTrace = ``")
+                    if (line == "StackTrace: ``")
                     {
                         add = false;
                     }
@@ -71,12 +71,12 @@ namespace EasyExceptions.Tests
 @"Exception of type 'System.Exception' was thrown.
 
 === EXCEPTION #1/1: Exception
-Message = Exception of type 'System.Exception' was thrown.
-@PathFromRootException = root
-@GetType().FullName = System.Exception
-HResult = -2146233088
-IsTransient = false
-StackTrace = ``
+Message: Exception of type 'System.Exception' was thrown.
+@PathFromRootException: root
+@GetType().FullName: System.Exception
+HResult: -2146233088
+IsTransient: false
+StackTrace: ``
 ``
 ";
 
@@ -90,22 +90,22 @@ StackTrace = ``
 @"Outer Exception. Inner exception.
 
 === EXCEPTION #1/2: Exception
-Message = Inner exception.
-@PathFromRootException = root.InnerException
-@GetType().FullName = System.Exception
-HResult = -2146233088
-IsTransient = false
-StackTrace = ``
+Message: Inner exception.
+@PathFromRootException: root.InnerException
+@GetType().FullName: System.Exception
+HResult: -2146233088
+IsTransient: false
+StackTrace: ``
 ``
 
 === EXCEPTION #2/2: Exception
-Message = Outer Exception.
-@PathFromRootException = root
-@GetType().FullName = System.Exception
-InnerException = root.InnerException
-HResult = -2146233088
-IsTransient = false
-StackTrace = ``
+Message: Outer Exception.
+@PathFromRootException: root
+@GetType().FullName: System.Exception
+InnerException: root.InnerException
+HResult: -2146233088
+IsTransient: false
+StackTrace: ``
 ``
 ";
 
@@ -119,15 +119,15 @@ StackTrace = ``
 @"Exception of type 'System.Exception' was thrown.
 
 === EXCEPTION #1/1: Exception
-Message = Exception of type 'System.Exception' was thrown.
-@PathFromRootException = root
-@GetType().FullName = System.Exception
-Data =
+Message: Exception of type 'System.Exception' was thrown.
+@PathFromRootException: root
+@GetType().FullName: System.Exception
+Data:
   foo: bar
   42: buz
-HResult = -2146233088
-IsTransient = false
-StackTrace = ``
+HResult: -2146233088
+IsTransient: false
+StackTrace: ``
 ``
 ";
 
@@ -141,16 +141,16 @@ StackTrace = ``
 @"Exception of type 'EasyExceptions.Tests.ListException' was thrown.
 
 === EXCEPTION #1/1: ListException
-Message = Exception of type 'EasyExceptions.Tests.ListException' was thrown.
-@PathFromRootException = root
-@GetType().FullName = EasyExceptions.Tests.ListException
-List =
+Message: Exception of type 'EasyExceptions.Tests.ListException' was thrown.
+@PathFromRootException: root
+@GetType().FullName: EasyExceptions.Tests.ListException
+List:
 - foo
 - - bar
   - buz
-HResult = -2146233088
-IsTransient = false
-StackTrace = ``
+HResult: -2146233088
+IsTransient: false
+StackTrace: ``
 ``
 ";
 
@@ -164,34 +164,34 @@ StackTrace = ``
 @"One or more errors occurred. Exception of type 'System.Exception' was thrown. Value does not fall within the expected range.
 
 === EXCEPTION #1/3: ArgumentException
-Message = Value does not fall within the expected range.
-@PathFromRootException = root.InnerExceptions[1]
-@GetType().FullName = System.ArgumentException
-HResult = -2147024809
-IsTransient = false
-StackTrace = ``
+Message: Value does not fall within the expected range.
+@PathFromRootException: root.InnerExceptions[1]
+@GetType().FullName: System.ArgumentException
+HResult: -2147024809
+IsTransient: false
+StackTrace: ``
 ``
 
 === EXCEPTION #2/3: Exception
-Message = Exception of type 'System.Exception' was thrown.
-@PathFromRootException = root.InnerExceptions[0], root.InnerException
-@GetType().FullName = System.Exception
-HResult = -2146233088
-IsTransient = false
-StackTrace = ``
+Message: Exception of type 'System.Exception' was thrown.
+@PathFromRootException: root.InnerExceptions[0], root.InnerException
+@GetType().FullName: System.Exception
+HResult: -2146233088
+IsTransient: false
+StackTrace: ``
 ``
 
 === EXCEPTION #3/3: AggregateException
-Message = One or more errors occurred.
-@PathFromRootException = root
-@GetType().FullName = System.AggregateException
-InnerExceptions[0] = root.InnerExceptions[0], root.InnerException
-InnerExceptions[1] = root.InnerExceptions[1]
-InnerExceptionCount = 2
-InnerException = root.InnerExceptions[0], root.InnerException
-HResult = -2146233088
-IsTransient = false
-StackTrace = ``
+Message: One or more errors occurred.
+@PathFromRootException: root
+@GetType().FullName: System.AggregateException
+InnerExceptions[0]: root.InnerExceptions[0], root.InnerException
+InnerExceptions[1]: root.InnerExceptions[1]
+InnerExceptionCount: 2
+InnerException: root.InnerExceptions[0], root.InnerException
+HResult: -2146233088
+IsTransient: false
+StackTrace: ``
 ``
 ";
 
@@ -205,13 +205,13 @@ StackTrace = ``
 @"Exception of type 'EasyExceptions.Tests.FallingException' was thrown.
 
 === EXCEPTION #1/1: FallingException
-Message = Exception of type 'EasyExceptions.Tests.FallingException' was thrown.
-@PathFromRootException = root
-@GetType().FullName = EasyExceptions.Tests.FallingException
-FallingProperty = Exception of type System.NotSupportedException was thrown
-HResult = -2146233088
-IsTransient = false
-StackTrace = ``
+Message: Exception of type 'EasyExceptions.Tests.FallingException' was thrown.
+@PathFromRootException: root
+@GetType().FullName: EasyExceptions.Tests.FallingException
+FallingProperty: Exception of type System.NotSupportedException was thrown
+HResult: -2146233088
+IsTransient: false
+StackTrace: ``
 ``
 ";
 
@@ -225,103 +225,103 @@ StackTrace = ``
 @"Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
 
 === EXCEPTION #1/10: DynamicException
-Message = Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
-@PathFromRootException = root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
-@GetType().FullName = EasyExceptions.Tests.DynamicException
-DynamicInnerException = root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
-HResult = -2146233088
-IsTransient = false
-StackTrace = ``
+Message: Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
+@PathFromRootException: root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
+@GetType().FullName: EasyExceptions.Tests.DynamicException
+DynamicInnerException: root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
+HResult: -2146233088
+IsTransient: false
+StackTrace: ``
 ``
 
 === EXCEPTION #2/10: DynamicException
-Message = Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
-@PathFromRootException = root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
-@GetType().FullName = EasyExceptions.Tests.DynamicException
-DynamicInnerException = root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
-HResult = -2146233088
-IsTransient = false
-StackTrace = ``
+Message: Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
+@PathFromRootException: root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
+@GetType().FullName: EasyExceptions.Tests.DynamicException
+DynamicInnerException: root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
+HResult: -2146233088
+IsTransient: false
+StackTrace: ``
 ``
 
 === EXCEPTION #3/10: DynamicException
-Message = Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
-@PathFromRootException = root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
-@GetType().FullName = EasyExceptions.Tests.DynamicException
-DynamicInnerException = root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
-HResult = -2146233088
-IsTransient = false
-StackTrace = ``
+Message: Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
+@PathFromRootException: root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
+@GetType().FullName: EasyExceptions.Tests.DynamicException
+DynamicInnerException: root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
+HResult: -2146233088
+IsTransient: false
+StackTrace: ``
 ``
 
 === EXCEPTION #4/10: DynamicException
-Message = Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
-@PathFromRootException = root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
-@GetType().FullName = EasyExceptions.Tests.DynamicException
-DynamicInnerException = root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
-HResult = -2146233088
-IsTransient = false
-StackTrace = ``
+Message: Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
+@PathFromRootException: root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
+@GetType().FullName: EasyExceptions.Tests.DynamicException
+DynamicInnerException: root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
+HResult: -2146233088
+IsTransient: false
+StackTrace: ``
 ``
 
 === EXCEPTION #5/10: DynamicException
-Message = Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
-@PathFromRootException = root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
-@GetType().FullName = EasyExceptions.Tests.DynamicException
-DynamicInnerException = root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
-HResult = -2146233088
-IsTransient = false
-StackTrace = ``
+Message: Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
+@PathFromRootException: root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
+@GetType().FullName: EasyExceptions.Tests.DynamicException
+DynamicInnerException: root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
+HResult: -2146233088
+IsTransient: false
+StackTrace: ``
 ``
 
 === EXCEPTION #6/10: DynamicException
-Message = Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
-@PathFromRootException = root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
-@GetType().FullName = EasyExceptions.Tests.DynamicException
-DynamicInnerException = root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
-HResult = -2146233088
-IsTransient = false
-StackTrace = ``
+Message: Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
+@PathFromRootException: root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
+@GetType().FullName: EasyExceptions.Tests.DynamicException
+DynamicInnerException: root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
+HResult: -2146233088
+IsTransient: false
+StackTrace: ``
 ``
 
 === EXCEPTION #7/10: DynamicException
-Message = Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
-@PathFromRootException = root.DynamicInnerException.DynamicInnerException.DynamicInnerException
-@GetType().FullName = EasyExceptions.Tests.DynamicException
-DynamicInnerException = root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
-HResult = -2146233088
-IsTransient = false
-StackTrace = ``
+Message: Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
+@PathFromRootException: root.DynamicInnerException.DynamicInnerException.DynamicInnerException
+@GetType().FullName: EasyExceptions.Tests.DynamicException
+DynamicInnerException: root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
+HResult: -2146233088
+IsTransient: false
+StackTrace: ``
 ``
 
 === EXCEPTION #8/10: DynamicException
-Message = Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
-@PathFromRootException = root.DynamicInnerException.DynamicInnerException
-@GetType().FullName = EasyExceptions.Tests.DynamicException
-DynamicInnerException = root.DynamicInnerException.DynamicInnerException.DynamicInnerException
-HResult = -2146233088
-IsTransient = false
-StackTrace = ``
+Message: Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
+@PathFromRootException: root.DynamicInnerException.DynamicInnerException
+@GetType().FullName: EasyExceptions.Tests.DynamicException
+DynamicInnerException: root.DynamicInnerException.DynamicInnerException.DynamicInnerException
+HResult: -2146233088
+IsTransient: false
+StackTrace: ``
 ``
 
 === EXCEPTION #9/10: DynamicException
-Message = Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
-@PathFromRootException = root.DynamicInnerException
-@GetType().FullName = EasyExceptions.Tests.DynamicException
-DynamicInnerException = root.DynamicInnerException.DynamicInnerException
-HResult = -2146233088
-IsTransient = false
-StackTrace = ``
+Message: Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
+@PathFromRootException: root.DynamicInnerException
+@GetType().FullName: EasyExceptions.Tests.DynamicException
+DynamicInnerException: root.DynamicInnerException.DynamicInnerException
+HResult: -2146233088
+IsTransient: false
+StackTrace: ``
 ``
 
 === EXCEPTION #10/10: DynamicException
-Message = Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
-@PathFromRootException = root
-@GetType().FullName = EasyExceptions.Tests.DynamicException
-DynamicInnerException = root.DynamicInnerException
-HResult = -2146233088
-IsTransient = false
-StackTrace = ``
+Message: Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
+@PathFromRootException: root
+@GetType().FullName: EasyExceptions.Tests.DynamicException
+DynamicInnerException: root.DynamicInnerException
+HResult: -2146233088
+IsTransient: false
+StackTrace: ``
 ``
 ";
 
@@ -335,19 +335,19 @@ StackTrace = ``
 @"Validation failed for one or more entities. See 'EntityValidationErrors' property for more details.
 
 === EXCEPTION #1/1: ComplexPropertyException
-Message = Validation failed for one or more entities. See 'EntityValidationErrors' property for more details.
-@PathFromRootException = root
-@GetType().FullName = EasyExceptions.Tests.ComplexPropertyException
-EntityValidationErrors =
+Message: Validation failed for one or more entities. See 'EntityValidationErrors' property for more details.
+@PathFromRootException: root
+@GetType().FullName: EasyExceptions.Tests.ComplexPropertyException
+EntityValidationErrors:
 - Entry:
     Entity:
       Id: 240b10f4-11dc-4e75-b268-da922fa6d781
     ValidationErrors:
     - PropertyName: Author
       ErrorMessage: The Author field is required.
-HResult = -2146233088
-IsTransient = false
-StackTrace = ``
+HResult: -2146233088
+IsTransient: false
+StackTrace: ``
 ``
 ";
 
@@ -361,12 +361,12 @@ StackTrace = ``
             @"The port 'COM999' does not exist.
 
 === EXCEPTION #1/1: IOException
-Message = The port 'COM999' does not exist.
-@PathFromRootException = root
-@GetType().FullName = System.IO.IOException
-HResult = -2146232800
-IsTransient = false
-StackTrace = ``
+Message: The port 'COM999' does not exist.
+@PathFromRootException: root
+@GetType().FullName: System.IO.IOException
+HResult: -2146232800
+IsTransient: false
+StackTrace: ``
 ``
 ";
 
@@ -393,15 +393,15 @@ StackTrace = ``
             @"Exception of type 'EasyExceptions.Tests.ReferenceLoopObjectException' was thrown.
 
 === EXCEPTION #1/1: ReferenceLoopObjectException
-Message = Exception of type 'EasyExceptions.Tests.ReferenceLoopObjectException' was thrown.
-@PathFromRootException = root
-@GetType().FullName = EasyExceptions.Tests.ReferenceLoopObjectException
-ReferenceLoopObject = &o0
+Message: Exception of type 'EasyExceptions.Tests.ReferenceLoopObjectException' was thrown.
+@PathFromRootException: root
+@GetType().FullName: EasyExceptions.Tests.ReferenceLoopObjectException
+ReferenceLoopObject: &o0
   LoopedReference: *o0
   Text: Hello
-HResult = -2146233088
-IsTransient = false
-StackTrace = ``
+HResult: -2146233088
+IsTransient: false
+StackTrace: ``
 ``
 ";
 
@@ -415,15 +415,15 @@ StackTrace = ``
             @"Exception of type 'EasyExceptions.Tests.ThrowingPropertyException' was thrown.
 
 === EXCEPTION #1/1: ThrowingPropertyException
-Message = Exception of type 'EasyExceptions.Tests.ThrowingPropertyException' was thrown.
-@PathFromRootException = root
-@GetType().FullName = EasyExceptions.Tests.ThrowingPropertyException
-ThrowingProperty = Exception of type System.ObjectDisposedException was thrown
-ObjectWithThrowingProperty =
+Message: Exception of type 'EasyExceptions.Tests.ThrowingPropertyException' was thrown.
+@PathFromRootException: root
+@GetType().FullName: EasyExceptions.Tests.ThrowingPropertyException
+ThrowingProperty: Exception of type System.ObjectDisposedException was thrown
+ObjectWithThrowingProperty:
   ThrowingProperty: Exception of type System.ObjectDisposedException was thrown
-HResult = -2146233088
-IsTransient = false
-StackTrace = ``
+HResult: -2146233088
+IsTransient: false
+StackTrace: ``
 ``
 ";
 

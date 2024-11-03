@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace EasyExceptions.WritingRules
+namespace EasyExceptions.ExcPartWriters
 {
     public class CalculatedPropertiesWriter : IExcPartWriter
     {
@@ -12,11 +12,11 @@ namespace EasyExceptions.WritingRules
             if (exception == null) 
                 return;
 
-            resultBuilder.AppendFormat("@PathFromRootException = {0}",
+            resultBuilder.AppendFormat("@PathFromRootException: {0}",
                 exception.Data[ExceptionDumpUtil.ServiceDataPrefix + " PathFromRootException"]);
             resultBuilder.AppendLine();
 
-            resultBuilder.AppendFormat("@GetType().FullName = {0}", exception.GetType().FullName);
+            resultBuilder.AppendFormat("@GetType().FullName: {0}", exception.GetType().FullName);
             resultBuilder.AppendLine();
         }
     }
