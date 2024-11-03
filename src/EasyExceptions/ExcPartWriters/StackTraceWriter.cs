@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace EasyExceptions.WritingRules
+namespace EasyExceptions.ExcPartWriters
 {
     public class StackTraceWriter : IExcPartWriter
     {
@@ -12,7 +12,7 @@ namespace EasyExceptions.WritingRules
             if (exception == null)
                 return;
 
-            resultBuilder.AppendFormat("{0} = ``", "StackTrace").AppendLine();
+            resultBuilder.AppendFormat("{0}: ``", "StackTrace").AppendLine();
             resultBuilder.Append(exception.StackTrace).AppendLine();
             resultBuilder.Append("``").AppendLine();
 

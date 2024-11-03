@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using EasyExceptions.WritingRules;
+using EasyExceptions.ExcPartWriters;
 
 namespace EasyExceptions.NameValueWriters
 {

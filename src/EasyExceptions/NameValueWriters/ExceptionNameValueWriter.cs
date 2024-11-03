@@ -7,7 +7,7 @@ namespace EasyExceptions.NameValueWriters
     {
         protected override void WriteInternal(StringBuilder resultBuilder, string name, Exception dictionary)
         {
-            resultBuilder.AppendFormat("{0} = {1}", name,
+            resultBuilder.AppendFormat("{0}: {1}", name,
                 dictionary.Data[ExceptionDumpUtil.ServiceDataPrefix + " PathFromRootException"]);
             resultBuilder.AppendLine();
         }

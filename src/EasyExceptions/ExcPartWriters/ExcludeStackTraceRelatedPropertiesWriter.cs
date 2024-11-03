@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 
-namespace EasyExceptions.WritingRules
+namespace EasyExceptions.ExcPartWriters
 {
     public class ExcludeStackTraceRelatedPropertiesWriter : IExcPartWriter
     {

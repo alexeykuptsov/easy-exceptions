@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace EasyExceptions.WritingRules
+namespace EasyExceptions.ExcPartWriters
 {
     public class RegularPropertiesWriter : IExcPartWriter
     {

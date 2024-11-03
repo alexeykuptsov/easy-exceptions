@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using EasyExceptions.WritingRules;
 using System.Reflection;
+using EasyExceptions.ExcPartWriters;
 using EasyExceptions.NameValueWriters;
 using EasyExceptions.Utils.Io;
 
