@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
+namespace EasyExceptions.Tests;
 
-namespace EasyExceptions.Tests
+public class ListException : Exception
 {
-    public class ListException : Exception
-    {
-        public List<object> List => new List<object> {"foo", new[] {"bar", "buz"}};
-    }
+    public List<object> List => new() {"foo", new[] {"bar", "buz"}};
 }

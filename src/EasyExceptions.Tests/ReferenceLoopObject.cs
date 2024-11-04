@@ -1,8 +1,7 @@
-namespace EasyExceptions.Tests
+namespace EasyExceptions.Tests;
+
+public class ReferenceLoopObject
 {
-    public class ReferenceLoopObject
-    {
-        public ReferenceLoopObject LoopedReference => this;
-        public string Text => "Hello";
-    }
+    public ReferenceLoopObject LoopedReference => this;
+    public string Text => "Hello";
 }

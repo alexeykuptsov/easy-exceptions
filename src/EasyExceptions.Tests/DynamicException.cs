@@ -1,9 +1,6 @@
-﻿using System;
+﻿namespace EasyExceptions.Tests;
 
-namespace EasyExceptions.Tests
+public class DynamicException : Exception
 {
-    public class DynamicException : Exception
-    {
-        public Exception DynamicInnerException => new DynamicException();
-    }
+    public Exception DynamicInnerException => new DynamicException();
 }

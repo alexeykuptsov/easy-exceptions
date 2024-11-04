@@ -1,100 +1,96 @@
-﻿using System;
-using System.Globalization;
-using System.IO;
+﻿using System.Globalization;
 using System.IO.Ports;
 using System.Text;
-using System.Threading;
-using NUnit.Framework;
 
-namespace EasyExceptions.Tests
+namespace EasyExceptions.Tests;
+
+public class ExceptionDumpUtilTests
 {
-    public class ExceptionDumpUtilTests
+    private static void DoTest(string expectation, Func<Exception> action, CultureInfo uiCulture)
     {
-        private static void DoTest(string expectation, Func<Exception> action, CultureInfo uiCulture)
+        var savedCulture = Thread.CurrentThread.CurrentCulture;
+        Thread.CurrentThread.CurrentCulture = uiCulture;
+        var savedUiCulture = Thread.CurrentThread.CurrentUICulture;
+        Thread.CurrentThread.CurrentUICulture = uiCulture;
+        ExceptionDumpUtil.OmittedSourceDirectories = Path.GetDirectoryName(TestContext.CurrentContext.TestDirectory);
+        try
         {
-            var savedCulture = Thread.CurrentThread.CurrentCulture;
-            Thread.CurrentThread.CurrentCulture = uiCulture;
-            var savedUiCulture = Thread.CurrentThread.CurrentUICulture;
-            Thread.CurrentThread.CurrentUICulture = uiCulture;
-            ExceptionDumpUtil.OmittedSourceDirectories = Path.GetDirectoryName(TestContext.CurrentContext.TestDirectory);
-            try
-            {
-                var ex = action();
-                var dumped = ExceptionDumpUtil.Dump(ex);
-                Assert.AreEqual(expectation.Replace("\r\n", "\n"), CutStackTraces(dumped).Replace("\r\n", "\n"));
-            }
-            finally
-            {
-                ExceptionDumpUtil.OmittedSourceDirectories = null;
-                Thread.CurrentThread.CurrentUICulture = savedUiCulture;
-                Thread.CurrentThread.CurrentCulture = savedCulture;
-            }
+            var ex = action();
+            var dumped = ExceptionDumpUtil.Dump(ex);
+            Assert.AreEqual(expectation.Replace("\r\n", "\n"), CutStackTraces(dumped).Replace("\r\n", "\n"));
         }
-
-        private static string CutStackTraces(string dumped)
+        finally
         {
-            var resultBuilder = new StringBuilder();
-            bool add = true;
-            bool firstLine = true;
-            foreach (var line in dumped.Split(new [] {Environment.NewLine}, StringSplitOptions.None))
+            ExceptionDumpUtil.OmittedSourceDirectories = null;
+            Thread.CurrentThread.CurrentUICulture = savedUiCulture;
+            Thread.CurrentThread.CurrentCulture = savedCulture;
+        }
+    }
+
+    private static string CutStackTraces(string dumped)
+    {
+        var resultBuilder = new StringBuilder();
+        bool add = true;
+        bool firstLine = true;
+        foreach (var line in dumped.Split(new [] {Environment.NewLine}, StringSplitOptions.None))
+        {
+            if (add)
             {
-                if (add)
+                if (!firstLine)
+                    resultBuilder.AppendLine();
+                firstLine = false;
+                resultBuilder.Append(line);
+                if (line == "StackTrace: ``")
                 {
-                    if (!firstLine)
-                        resultBuilder.AppendLine();
-                    firstLine = false;
+                    add = false;
+                }
+            }
+            else
+            {
+                if (line == "``")
+                {
+                    resultBuilder.AppendLine();
                     resultBuilder.Append(line);
-                    if (line == "StackTrace: ``")
-                    {
-                        add = false;
-                    }
-                }
-                else
-                {
-                    if (line == "``")
-                    {
-                        resultBuilder.AppendLine();
-                        resultBuilder.Append(line);
-                        add = true;
-                    }
+                    add = true;
                 }
             }
-            return resultBuilder.ToString();
         }
+        return resultBuilder.ToString();
+    }
 
-        private static void DoTest(string expectation, Func<Exception> action)
-        {
-            DoTest(expectation, action, new CultureInfo("en-US"));
-        }
+    private static void DoTest(string expectation, Func<Exception> action)
+    {
+        DoTest(expectation, action, new CultureInfo("en-US"));
+    }
 
-        private const string JustExceptionExpectation =
-@"Exception of type 'System.Exception' was thrown.
+    private const string JustExceptionExpectation =
+        @"Exception of type 'System.Exception' was thrown.
 
 === EXCEPTION #1/1: Exception
 Message: Exception of type 'System.Exception' was thrown.
 @PathFromRootException: root
 @GetType().FullName: System.Exception
+HasBeenThrown: false
 HResult: -2146233088
-IsTransient: false
 StackTrace: ``
 ``
 ";
 
-        [Test]
-        public void JustException()
-        {
-            DoTest(JustExceptionExpectation, () => new Exception());
-        }
+    [Test]
+    public void JustException()
+    {
+        DoTest(JustExceptionExpectation, () => new Exception());
+    }
 
-        private const string NestedExpectation =
-@"Outer Exception. Inner exception.
+    private const string NestedExpectation =
+        @"Outer Exception. Inner exception.
 
 === EXCEPTION #1/2: Exception
 Message: Inner exception.
 @PathFromRootException: root.InnerException
 @GetType().FullName: System.Exception
+HasBeenThrown: false
 HResult: -2146233088
-IsTransient: false
 StackTrace: ``
 ``
 
@@ -102,43 +98,43 @@ StackTrace: ``
 Message: Outer Exception.
 @PathFromRootException: root
 @GetType().FullName: System.Exception
+HasBeenThrown: false
 InnerException: root.InnerException
 HResult: -2146233088
-IsTransient: false
 StackTrace: ``
 ``
 ";
 
-        [Test]
-        public void Nested()
-        {
-            DoTest(NestedExpectation, () => new Exception("Outer Exception.", new Exception("Inner exception.")));
-        }
+    [Test]
+    public void Nested()
+    {
+        DoTest(NestedExpectation, () => new Exception("Outer Exception.", new Exception("Inner exception.")));
+    }
 
-        private const string DictionaryExpectation =
-@"Exception of type 'System.Exception' was thrown.
+    private const string DictionaryExpectation =
+        @"Exception of type 'System.Exception' was thrown.
 
 === EXCEPTION #1/1: Exception
 Message: Exception of type 'System.Exception' was thrown.
 @PathFromRootException: root
 @GetType().FullName: System.Exception
+HasBeenThrown: false
 Data:
   foo: bar
   42: buz
 HResult: -2146233088
-IsTransient: false
 StackTrace: ``
 ``
 ";
 
-        [Test]
-        public void Dictionary()
-        {
-            DoTest(DictionaryExpectation, () => new Exception { Data = { { "foo", "bar" }, { 42, "buz" } } });
-        }
+    [Test]
+    public void Dictionary()
+    {
+        DoTest(DictionaryExpectation, () => new Exception { Data = { { "foo", "bar" }, { 42, "buz" } } });
+    }
 
-        private const string ListExpectation =
-@"Exception of type 'EasyExceptions.Tests.ListException' was thrown.
+    private const string ListExpectation =
+        @"Exception of type 'EasyExceptions.Tests.ListException' was thrown.
 
 === EXCEPTION #1/1: ListException
 Message: Exception of type 'EasyExceptions.Tests.ListException' was thrown.
@@ -149,60 +145,59 @@ List:
 - - bar
   - buz
 HResult: -2146233088
-IsTransient: false
 StackTrace: ``
 ``
 ";
 
-        [Test]
-        public void List()
-        {
-            DoTest(ListExpectation, () => new ListException());
-        }
+    [Test]
+    public void List()
+    {
+        DoTest(ListExpectation, () => new ListException());
+    }
 
-        private const string AggregateExceptionExpectation =
-@"One or more errors occurred. Exception of type 'System.Exception' was thrown. Value does not fall within the expected range.
+    private const string AggregateExceptionExpectation =
+        @"One or more errors occurred. (Exception of type 'System.Exception' was thrown.) (Value does not fall within the expected range.)
 
 === EXCEPTION #1/3: ArgumentException
 Message: Value does not fall within the expected range.
-@PathFromRootException: root.InnerExceptions[1]
+@PathFromRootException: root.InnerExceptions[1], root.InternalInnerExceptions[1]
 @GetType().FullName: System.ArgumentException
 HResult: -2147024809
-IsTransient: false
 StackTrace: ``
 ``
 
 === EXCEPTION #2/3: Exception
 Message: Exception of type 'System.Exception' was thrown.
-@PathFromRootException: root.InnerExceptions[0], root.InnerException
+@PathFromRootException: root.InnerExceptions[0], root.InternalInnerExceptions[0], root.InnerException
 @GetType().FullName: System.Exception
+HasBeenThrown: false
 HResult: -2146233088
-IsTransient: false
 StackTrace: ``
 ``
 
 === EXCEPTION #3/3: AggregateException
-Message: One or more errors occurred.
+Message: One or more errors occurred. (Exception of type 'System.Exception' was thrown.) (Value does not fall within the expected range.)
 @PathFromRootException: root
 @GetType().FullName: System.AggregateException
-InnerExceptions[0]: root.InnerExceptions[0], root.InnerException
-InnerExceptions[1]: root.InnerExceptions[1]
+InnerExceptions[0]: root.InnerExceptions[0], root.InternalInnerExceptions[0], root.InnerException
+InnerExceptions[1]: root.InnerExceptions[1], root.InternalInnerExceptions[1]
 InnerExceptionCount: 2
-InnerException: root.InnerExceptions[0], root.InnerException
+InternalInnerExceptions[0]: root.InnerExceptions[0], root.InternalInnerExceptions[0], root.InnerException
+InternalInnerExceptions[1]: root.InnerExceptions[1], root.InternalInnerExceptions[1]
+InnerException: root.InnerExceptions[0], root.InternalInnerExceptions[0], root.InnerException
 HResult: -2146233088
-IsTransient: false
 StackTrace: ``
 ``
 ";
 
-        [Test]
-        public void AggregateException()
-        {
-            DoTest(AggregateExceptionExpectation, () => new AggregateException(new Exception(), new ArgumentException()));
-        }
+    [Test]
+    public void AggregateException()
+    {
+        DoTest(AggregateExceptionExpectation, () => new AggregateException(new Exception(), new ArgumentException()));
+    }
 
-        private const string FallingExceptionExpectation =
-@"Exception of type 'EasyExceptions.Tests.FallingException' was thrown.
+    private const string FallingExceptionExpectation =
+        @"Exception of type 'EasyExceptions.Tests.FallingException' was thrown.
 
 === EXCEPTION #1/1: FallingException
 Message: Exception of type 'EasyExceptions.Tests.FallingException' was thrown.
@@ -210,19 +205,18 @@ Message: Exception of type 'EasyExceptions.Tests.FallingException' was thrown.
 @GetType().FullName: EasyExceptions.Tests.FallingException
 FallingProperty: Exception of type System.NotSupportedException was thrown
 HResult: -2146233088
-IsTransient: false
 StackTrace: ``
 ``
 ";
 
-        [Test]
-        public void FallingException()
-        {
-            DoTest(FallingExceptionExpectation, () => new FallingException());
-        }
+    [Test]
+    public void FallingException()
+    {
+        DoTest(FallingExceptionExpectation, () => new FallingException());
+    }
 
-        private const string DynamicExceptionExpectation =
-@"Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
+    private const string DynamicExceptionExpectation =
+        @"Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
 
 === EXCEPTION #1/10: DynamicException
 Message: Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
@@ -230,7 +224,6 @@ Message: Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
 @GetType().FullName: EasyExceptions.Tests.DynamicException
 DynamicInnerException: root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
 HResult: -2146233088
-IsTransient: false
 StackTrace: ``
 ``
 
@@ -240,7 +233,6 @@ Message: Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
 @GetType().FullName: EasyExceptions.Tests.DynamicException
 DynamicInnerException: root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
 HResult: -2146233088
-IsTransient: false
 StackTrace: ``
 ``
 
@@ -250,7 +242,6 @@ Message: Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
 @GetType().FullName: EasyExceptions.Tests.DynamicException
 DynamicInnerException: root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
 HResult: -2146233088
-IsTransient: false
 StackTrace: ``
 ``
 
@@ -260,7 +251,6 @@ Message: Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
 @GetType().FullName: EasyExceptions.Tests.DynamicException
 DynamicInnerException: root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
 HResult: -2146233088
-IsTransient: false
 StackTrace: ``
 ``
 
@@ -270,7 +260,6 @@ Message: Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
 @GetType().FullName: EasyExceptions.Tests.DynamicException
 DynamicInnerException: root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
 HResult: -2146233088
-IsTransient: false
 StackTrace: ``
 ``
 
@@ -280,7 +269,6 @@ Message: Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
 @GetType().FullName: EasyExceptions.Tests.DynamicException
 DynamicInnerException: root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
 HResult: -2146233088
-IsTransient: false
 StackTrace: ``
 ``
 
@@ -290,7 +278,6 @@ Message: Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
 @GetType().FullName: EasyExceptions.Tests.DynamicException
 DynamicInnerException: root.DynamicInnerException.DynamicInnerException.DynamicInnerException.DynamicInnerException
 HResult: -2146233088
-IsTransient: false
 StackTrace: ``
 ``
 
@@ -300,7 +287,6 @@ Message: Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
 @GetType().FullName: EasyExceptions.Tests.DynamicException
 DynamicInnerException: root.DynamicInnerException.DynamicInnerException.DynamicInnerException
 HResult: -2146233088
-IsTransient: false
 StackTrace: ``
 ``
 
@@ -310,7 +296,6 @@ Message: Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
 @GetType().FullName: EasyExceptions.Tests.DynamicException
 DynamicInnerException: root.DynamicInnerException.DynamicInnerException
 HResult: -2146233088
-IsTransient: false
 StackTrace: ``
 ``
 
@@ -320,19 +305,18 @@ Message: Exception of type 'EasyExceptions.Tests.DynamicException' was thrown.
 @GetType().FullName: EasyExceptions.Tests.DynamicException
 DynamicInnerException: root.DynamicInnerException
 HResult: -2146233088
-IsTransient: false
 StackTrace: ``
 ``
 ";
 
-        [Test]
-        public void DynamicException()
-        {
-            DoTest(DynamicExceptionExpectation, () => new DynamicException());
-        }
+    [Test]
+    public void DynamicException()
+    {
+        DoTest(DynamicExceptionExpectation, () => new DynamicException());
+    }
 
-        private const string ComplexPropertyExpectation =
-@"Validation failed for one or more entities. See 'EntityValidationErrors' property for more details.
+    private const string ComplexPropertyExpectation =
+        @"Validation failed for one or more entities. See 'EntityValidationErrors' property for more details.
 
 === EXCEPTION #1/1: ComplexPropertyException
 Message: Validation failed for one or more entities. See 'EntityValidationErrors' property for more details.
@@ -346,51 +330,50 @@ EntityValidationErrors:
     - PropertyName: Author
       ErrorMessage: The Author field is required.
 HResult: -2146233088
-IsTransient: false
 StackTrace: ``
 ``
 ";
 
-        [Test]
-        public void ComplexProperty()
-        {
-            DoTest(ComplexPropertyExpectation, () => new ComplexPropertyException());
-        }
+    [Test]
+    public void ComplexProperty()
+    {
+        DoTest(ComplexPropertyExpectation, () => new ComplexPropertyException());
+    }
 
-        private const string WrongSerialPortExpectation =
-            @"The port 'COM999' does not exist.
+    private const string WrongSerialPortExpectation =
+        @"Could not find file 'COM999'.
 
-=== EXCEPTION #1/1: IOException
-Message: The port 'COM999' does not exist.
+=== EXCEPTION #1/1: FileNotFoundException
+Message: Could not find file 'COM999'.
 @PathFromRootException: root
-@GetType().FullName: System.IO.IOException
-HResult: -2146232800
-IsTransient: false
+@GetType().FullName: System.IO.FileNotFoundException
+FileName: COM999
+HResult: -2147024894
 StackTrace: ``
 ``
 ";
 
-        [Test]
-        public void WrongSerialPort()
+    [Test]
+    public void WrongSerialPort()
+    {
+        DoTest(WrongSerialPortExpectation, () =>
         {
-            DoTest(WrongSerialPortExpectation, () =>
+            var serialPort = new SerialPort("COM999");
+            try
             {
-                var serialPort = new SerialPort("COM999");
-                try
-                {
-                    serialPort.Open();
-                }
-                catch (IOException exception)
-                {
-                    return exception;
-                }
-                Assert.Fail();
-                return null;
-            });
-        }
+                serialPort.Open();
+            }
+            catch (IOException exception)
+            {
+                return exception;
+            }
+            Assert.Fail();
+            return null;
+        });
+    }
 
-        private const string ReferenceLoopExpectation =
-            @"Exception of type 'EasyExceptions.Tests.ReferenceLoopObjectException' was thrown.
+    private const string ReferenceLoopExpectation =
+        @"Exception of type 'EasyExceptions.Tests.ReferenceLoopObjectException' was thrown.
 
 === EXCEPTION #1/1: ReferenceLoopObjectException
 Message: Exception of type 'EasyExceptions.Tests.ReferenceLoopObjectException' was thrown.
@@ -400,19 +383,18 @@ ReferenceLoopObject: &o0
   LoopedReference: *o0
   Text: Hello
 HResult: -2146233088
-IsTransient: false
 StackTrace: ``
 ``
 ";
 
-        [Test]
-        public void ReferenceLoop()
-        {
-            DoTest(ReferenceLoopExpectation, () => new ReferenceLoopObjectException());
-        }
+    [Test]
+    public void ReferenceLoop()
+    {
+        DoTest(ReferenceLoopExpectation, () => new ReferenceLoopObjectException());
+    }
         
-        private const string ThrowingPropertyExpectation =
-            @"Exception of type 'EasyExceptions.Tests.ThrowingPropertyException' was thrown.
+    private const string ThrowingPropertyExpectation =
+        @"Exception of type 'EasyExceptions.Tests.ThrowingPropertyException' was thrown.
 
 === EXCEPTION #1/1: ThrowingPropertyException
 Message: Exception of type 'EasyExceptions.Tests.ThrowingPropertyException' was thrown.
@@ -422,15 +404,13 @@ ThrowingProperty: Exception of type System.ObjectDisposedException was thrown
 ObjectWithThrowingProperty:
   ThrowingProperty: Exception of type System.ObjectDisposedException was thrown
 HResult: -2146233088
-IsTransient: false
 StackTrace: ``
 ``
 ";
 
-        [Test]
-        public void ThrowingProperty()
-        {
-            DoTest(ThrowingPropertyExpectation, () => new ThrowingPropertyException());
-        }
+    [Test]
+    public void ThrowingProperty()
+    {
+        DoTest(ThrowingPropertyExpectation, () => new ThrowingPropertyException());
     }
 }

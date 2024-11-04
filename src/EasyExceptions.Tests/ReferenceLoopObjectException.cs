@@ -1,9 +1,6 @@
-using System;
+namespace EasyExceptions.Tests;
 
-namespace EasyExceptions.Tests
+public class ReferenceLoopObjectException : Exception
 {
-    public class ReferenceLoopObjectException : Exception
-    {
-        public ReferenceLoopObject ReferenceLoopObject { get; } = new ReferenceLoopObject();
-    }
+    public ReferenceLoopObject ReferenceLoopObject { get; } = new();
 }
